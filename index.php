@@ -10,11 +10,9 @@
 </head>
 
 <body>
-    <h1>hotels</h1>
+    <h1>Hotels</h1>
     <?php
-
     $hotels = [
-
         [
             'name' => 'Hotel Belvedere',
             'description' => 'Hotel Belvedere Descrizione',
@@ -50,27 +48,27 @@
             'vote' => 2,
             'distance_to_center' => 50
         ],
-
     ];
 
+
+    $filterVote = isset($_GET['vote']) ? $_GET['vote'] : null;
+    $filterParking = isset($_GET['parking']) ? true : false;
     ?>
 
     <div class="container">
-        <form class="">
-            <div class="mb-3 ">
+        <form action="index.php" method="GET">
+            <div class="mb-3">
                 <label for="vote" class="form-label">Voto</label>
-                <input type="number" min="1" max="5" class="form-control w-25" id="vote">
+                <input type="number" min="1" max="5" class="form-control w-25" id="vote" name="vote">
             </div>
-            <div class="mb-3  form-check ">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="parking">
+                <label class="form-check-label" for="exampleCheck1">Parcheggio disponibile</label>
             </div>
-            <div class=" mb-3 ">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Filtra</button>
             </div>
         </form>
-
-
 
         <table class="table">
             <thead>
@@ -83,20 +81,32 @@
                 </tr>
             </thead>
             <tbody>
-
                 <?php
                 foreach ($hotels as $hotel) {
-                    echo '<tr></tr>';
-                    foreach ($hotel as $key => $value) {
-                        echo "<td>$value</td>";
+
+                    if (isset($filterVote) && $hotel['vote'] < $filterVote) {
+                        continue;
                     }
+
+
+                    if ($filterParking && !$hotel['parking']) {
+                        continue;
+                    }
+
+
+                    echo '<tr>';
+                    echo "<td>{$hotel['name']}</td>";
+                    echo "<td>{$hotel['description']}</td>";
+                    echo "<td>" . ($hotel['parking'] ? 'Sì' : 'No') . "</td>";
+                    echo "<td>{$hotel['vote']}</td>";
+                    echo "<td>{$hotel['distance_to_center']} km</td>";
+                    echo '</tr>';
                 }
-
                 ?>
-
             </tbody>
         </table>
     </div>
+
     <!--Bootstrap js-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
